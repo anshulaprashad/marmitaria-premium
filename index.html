@@ -86,7 +86,64 @@
             }
         }
         
-        /* ESTILO DO BOTÃO DE COMPARTILHAMENTO */
+        /* ESTILO DO BOTÃO DE COMPARTILHAMENTO FLUTUANTE */
+        .share-float-btn {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 110px;
+            right: 20px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.5);
+            z-index: 999;
+            cursor: pointer;
+            border: 2px solid white;
+            animation: share-float 3s ease-in-out infinite;
+            line-height: 1.2;
+            padding: 5px;
+        }
+        
+        @keyframes share-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .share-float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .share-float-btn {
+                width: 55px;
+                height: 55px;
+                bottom: 100px;
+                right: 20px;
+                font-size: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .share-float-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 90px;
+                right: 15px;
+                font-size: 9px;
+            }
+        }
+        
+        /* ESTILO DO BOTÃO DE COMPARTILHAMENTO NO FOOTER */
         .share-button-container {
             margin-top: 30px;
             margin-bottom: 20px;
@@ -346,6 +403,12 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Botão de pedido principal -->
+                    <a href="https://wa.me/5511999999999?text= 🎯%20QUERO%20GARANTIR%20MEU%20MARMITEX%20DO%20DIA%21%20🍱%0A%0A👉%20VIM%20PELA%20PROMO%C3%87%C3%83O%20DO%20SITE%0A👉%20Quero%20o%20MARMITEX%20Completo%20por%20R%24%2021%2C90%0A👉%20Qual%20o%20card%C3%A1pio%20de%20hoje%3F%0A👉%20Qual%20o%20tempo%20de%20entrega%3F%0A%0A⏰%20N%C3%83O%20QUERO%20PERDER%20ESSA%20OFERTA%21" 
+                       class="btn-pedir-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> PEDIR AGORA PELO WHATSAPP
+                    </a>
                 </div>
             </div>
         </div>
@@ -371,9 +434,9 @@
         <p>📍 Entregamos em toda região | ⏰ Funcionamos de Segunda a Sábado, 11h às 21h</p>
         <p>📞 Telefone: (11) 99999-9999 | 📍 Endereço: Rua da Fome, 123 - Centro</p>
         
-        <!-- Botão de Compartilhamento -->
+        <!-- Botão de Compartilhamento no Footer -->
         <div class="share-button-container">
-            <button onclick="compartilharWhatsAppComPreview()" class="share-button">
+            <button onclick="compartilharComPreview()" class="share-button">
                 <i class="fab fa-whatsapp"></i> COMPARTILHAR CARDÁPIO
             </button>
             <p class="share-text">Compartilhe nosso cardápio especial com seus amigos!</p>
@@ -446,7 +509,7 @@
         
         function sTi(t,p){tS=t;pS=p;document.querySelectorAll('.tamanho-item').forEach(i=>i.classList.remove('selecionado'));event.currentTarget.classList.add('selecionado');aLW();}
         
-        function aLW(){const m=`🍱 QUERO O MARMITEX ${tS} POR R$ ${pS.replace('.', ',')}!\n\n👉 Tamanho: ${tS}\n👉 Preço: R$ ${pS.replace('.', ',')}\n👉 Quero o cardápio de hoje\n\n🚀 ENVIA MEU PEDIDO!`;const u=`https://wa.me/5511999999999?text=${encodeURIComponent(m)}`;const b=document.querySelector('.whatsapp-btn-final');if(b)b.href=u;}
+        function aLW(){const m=`🍱 QUERO O MARMITEX ${tS} POR R$ ${pS.replace('.', ',')}!\n\n👉 Tamanho: ${tS}\n👉 Preço: R$ ${pS.replace('.', ',')}\n👉 Quero o cardápio de hoje\n\n🚀 ENVIA MEU PEDIDO!`;const u=`https://wa.me/5511999999999?text=${encodeURIComponent(m)}`;const b=document.querySelector('.whatsapp-btn-final');if(b)b.href=u;const b2=document.querySelector('.btn-pedir-whatsapp');if(b2)b2.href=u;}
         
         function mCD(){
             const d=['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
@@ -756,7 +819,7 @@
         }
         
         // === BOTÃO DE COMPARTILHAMENTO COM PREVIEW ===
-        function compartilharWhatsAppComPreview() {
+        function compartilharComPreview() {
             const hoje = new Date();
             const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sábado'];
             const dia = dias[hoje.getDay()];
@@ -764,12 +827,45 @@
             // URL do seu backend no Render
             const urlPreview = 'https://rei-marmitex.onrender.com/?preview=sim';
             
-            // Texto personalizado
-            const texto = `🍱 OLÁ! CONFIRA O CARDÁPIO DE HOJE DO REI DA MARMITEX! 👑\n\n🔗 ${urlPreview}\n\n🎯 CARDÁPIO DIFERENTE CADA DIA!\n📞 (11) 99999-9999`;
+            // Texto otimizado para WhatsApp
+            const texto = `🍱 *O REI DA MARMITEX* 👑
+
+🎯 *CARDÁPIO ESPECIAL DE ${dia.toUpperCase()}!*
+
+🔥 Prato do dia exclusivo
+🚚 Entrega grátis na região
+⏰ Segunda a Sábado, 11h às 21h
+
+📞 *WhatsApp:* (11) 99999-9999
+
+🔗 ${urlPreview}
+
+*NÃO PERCA AS OFERTAS DO DIA!* 🎁`;
             
             // Abre WhatsApp
             window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
         }
+        
+        // Adiciona botão flutuante de compartilhamento
+        (function() {
+            // Cria botão flutuante
+            const shareBtn = document.createElement('a');
+            shareBtn.href = '#';
+            shareBtn.innerHTML = '📤<br>Compartilhar';
+            shareBtn.title = 'Compartilhar cardápio no WhatsApp';
+            shareBtn.className = 'share-float-btn';
+            
+            // Adiciona evento de clique
+            shareBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                compartilharComPreview();
+            });
+            
+            // Adiciona ao body após carregamento
+            setTimeout(() => {
+                document.body.appendChild(shareBtn);
+            }, 1000);
+        })();
         
         function initLandingPage(){
             const tfm=60*25;
