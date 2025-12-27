@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 10000;
 // Serve arquivos estáticos (seu HTML, CSS, JS)
 app.use(express.static('public'));
 
-// Cardápios da semana
+// Cardápios da semana com imagens CORRETAS
 const cardapios = {
   'segunda-feira': { 
     img: 'marmita20.png',
@@ -29,14 +29,14 @@ const cardapios = {
     descricao: 'HOJE TEM BIFE À MILANESA! 🥩 Arroz + Feijão + Salada + Farofa - R$ 21,90'
   },
   'sexta-feira': { 
-    img: 'feijoadasabado.jpg', 
+    img: 'feijoadasabado.jpg',  // ⭐ SEXTA usa feijoadasabado.jpg
     titulo: 'SEXTA: Lasanha de Carne Mussarela',
     descricao: 'HOJE TEM LASANHA ESPECIAL! 🍝 Arroz + Feijão + Salada + Farofa - R$ 21,90'
   },
   'sábado': { 
     img: 'marmitex2.jpg', 
     titulo: 'SÁBADO: Opção Normal OU Feijoada',
-    descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada - R$ 21,90'
+    descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa - R$ 21,90'
   },
   'domingo': { 
     img: 'logorei.jpg', 
@@ -45,31 +45,40 @@ const cardapios = {
   }
 };
 
-// Rota PRINCIPAL - Detecta automaticamente
+// URL base para imagens
+const IMAGE_BASE = 'https://anshulaprashad.github.io/marmitex/';
+
+// ⚡ Rota PRINCIPAL - O WhatsApp lê ESTA rota primeiro!
 app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
   const hoje = new Date().toLocaleString('pt-BR', { weekday: 'long' }).toLowerCase();
   const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
-  const imageUrl = `https://anshulaprashad.github.io/marmitex/${cardapio.img}`;
+  const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
 
-  // Detecta WhatsApp/Facebook/Twitter (bots de preview)
-  const isBot = /WhatsApp|TelegramBot|facebookexternalhit|Twitterbot|LinkedInBot|Discordbot/i.test(userAgent) ||
-                req.query._escaped_fragment_ !== undefined;
+  console.log('='.repeat(50));
+  console.log(`📅 Dia: ${hoje}`);
+  console.log(`🤖 User Agent: ${userAgent.substring(0, 80)}`);
+  console.log(`🖼️ Imagem do dia: ${cardapio.img}`);
+
+  // Detecta WhatsApp/Telegram/Facebook/Twitter
+  const isBot = /WhatsApp|TelegramBot|facebookexternalhit|Twitterbot|LinkedInBot|Discordbot|Slackbot/i.test(userAgent);
 
   if (isBot) {
-    console.log(`🤖 BOT detectado - Gerando preview para: ${cardapio.titulo}`);
+    console.log('🎯 BOT DETECTADO! Gerando preview dinâmico...');
     
-    // HTML para PREVIEW (WhatsApp vê isso)
+    // ⭐⭐ IMPORTANTE: WhatsApp lê ESTE HTML, não faz redirecionamento!
     const htmlPreview = `
 <!DOCTYPE html>
 <html prefix="og: https://ogp.me/ns#" lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
     <title>👑 ${cardapio.titulo} - O REI DA MARMITEX</title>
     <meta name="description" content="${cardapio.descricao}">
     
-    <!-- Open Graph Tags -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
     <meta property="og:title" content="🍱 ${cardapio.titulo} - O REI DA MARMITEX">
@@ -87,9 +96,7 @@ app.get('/', (req, res) => {
     <meta name="twitter:description" content="${cardapio.descricao}">
     <meta name="twitter:image" content="${imageUrl}">
     
-    <!-- Redireciona para landing page após 0 segundos -->
-    <meta http-equiv="refresh" content="0;url=/landing">
-    
+    <!-- ⭐⭐ WhatsApp PRECISA ver este conteúdo SEM redirecionamento! -->
     <style>
         body {
             margin: 0;
@@ -103,46 +110,105 @@ app.get('/', (req, res) => {
             align-items: center;
             text-align: center;
         }
-        .container {
+        .preview-box {
             max-width: 800px;
+            background: rgba(28, 28, 30, 0.95);
             padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #FFD700;
         }
         h1 { color: #FFD700; margin-bottom: 20px; }
-        img { max-width: 100%; border-radius: 15px; margin: 20px 0; border: 3px solid #C41E3A; }
-        p { color: #fff; font-size: 18px; }
+        img { 
+            max-width: 100%; 
+            height: auto;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #C41E3A;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="preview-box">
         <h1>👑 O REI DA MARMITEX</h1>
         <h2>${cardapio.titulo}</h2>
         <p>${cardapio.descricao}</p>
         <img src="${imageUrl}" alt="${cardapio.titulo}">
-        <p>Redirecionando para o cardápio completo...</p>
+        <p>📍 WhatsApp: (11) 99999-9999 | ⏰ 11h às 21h</p>
     </div>
+    
+    <!-- ⭐⭐ IMPORTANTE: Script que redireciona usuários normais, mas NÃO WhatsApp -->
+    <script>
+        // Verifica se é WhatsApp (WhatsApp não executa JavaScript!)
+        const isWhatsApp = navigator.userAgent.includes('WhatsApp');
+        
+        if (!isWhatsApp) {
+            // Se NÃO for WhatsApp, redireciona para landing page
+            setTimeout(() => {
+                window.location.href = '/landing';
+            }, 100);
+        }
+    </script>
 </body>
 </html>`;
     
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.send(htmlPreview);
+    
   } else {
-    // Usuário normal - redireciona para landing page
+    // Usuário normal - redireciona IMEDIATAMENTE para landing
+    console.log('👤 Usuário normal detectado, redirecionando para /landing');
     res.redirect('/landing');
   }
 });
 
-// Rota da LANDING PAGE real
+// Rota da LANDING PAGE real (seu HTML completo)
 app.get('/landing', (req, res) => {
+  console.log('🌐 Servindo landing page completa...');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'online', service: 'Rei da Marmitex - Full System' });
+  res.json({ 
+    status: 'online', 
+    service: 'Rei da Marmitex - Preview Dinâmico',
+    dia_atual: new Date().toLocaleString('pt-BR', { weekday: 'long' }),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Rota para forçar preview de um dia específico (para testes)
+app.get('/preview/:dia', (req, res) => {
+  const dia = req.params.dia;
+  const cardapio = cardapios[dia] || cardapios['segunda-feira'];
+  const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
+  
+  console.log(`🧪 Preview forçado: ${dia} - ${cardapio.img}`);
+  
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta property="og:image" content="${imageUrl}">
+        <meta property="og:title" content="${cardapio.titulo}">
+        <meta property="og:description" content="${cardapio.descricao}">
+    </head>
+    <body>
+        <h1>Teste: ${dia}</h1>
+        <img src="${imageUrl}" width="400">
+        <p>${cardapio.descricao}</p>
+    </body>
+    </html>
+  `);
 });
 
 // Inicia servidor
 app.listen(PORT, () => {
-  console.log('👑 O REI DA MARMITEX - Sistema Completo');
-  console.log(`🚀 URL: https://marmitaria-premium.onrender.com/`);
-  console.log(`📅 Preview automático ativado!`);
+  console.log('='.repeat(50));
+  console.log('👑 O REI DA MARMITEX - Sistema de Preview WhatsApp');
+  console.log(`🚀 URL Principal: https://marmitaria-premium.onrender.com/`);
+  console.log(`🎯 Preview Teste: https://marmitaria-premium.onrender.com/preview/sexta-feira`);
+  console.log(`🏥 Health Check: https://marmitaria-premium.onrender.com/health`);
+  console.log('='.repeat(50));
 });
