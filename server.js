@@ -1,3 +1,5 @@
+[file name]: server.js
+[file content begin]
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -6,69 +8,70 @@ const PORT = process.env.PORT || 10000;
 // Serve arquivos estáticos (seu HTML, CSS, JS)
 app.use(express.static('public'));
 
-// ✅ Cardápios da semana com imagens CORRETAS para cada dia
+// ✅ Cardápios da semana com imagens que EXISTEM no seu repositório
 const cardapios = {
   'segunda-feira': { 
-    img: 'marmita20.png',  // Frango Grelhado
+    img: 'marmita20.png',  // ✅ Frango Grelhado
     titulo: 'SEGUNDA: Frango Grelhado Especial 🍗',
     descricao: 'HOJE TEM FRANGO GRELHADO! 🍗 Arroz + Feijão + Frango Suculento + Salada Fresca + Farofa Crocante - R$ 21,90'
   },
   'terça-feira': { 
-    img: 'marmita21.png',  // Carne de Panela
+    img: 'marmita21.png',  // ✅ Carne de Panela
     titulo: 'TERÇA: Carne de Panela Desfiada 🥩',
     descricao: 'HOJE TEM CARNE DE PANELA! 🥩 Arroz + Feijão + Carne Macia Desfiada + Salada + Farofa - R$ 21,90'
   },
   'quarta-feira': { 
-    img: 'marmita25.png',  // Moqueca
+    img: 'marmita25.png',  // ✅ Moqueca
     titulo: 'QUARTA: Moqueca de Frango Cremosa 🍲',
     descricao: 'HOJE TEM MOQUECA DE FRANGO! 🍲 Arroz + Feijão + Moqueca Cremosa + Salada + Farofa - R$ 21,90'
   },
   'quinta-feira': { 
-    img: 'marmita24.png',  // Milanesa
+    img: 'marmita24.png',  // ✅ Milanesa
     titulo: 'QUINTA: Bife à Milanesa Crocante 🥩',
     descricao: 'HOJE TEM BIFE À MILANESA! 🥩 Arroz + Feijão + Milanesa Crocante + Salada + Farofa - R$ 21,90'
   },
   'sexta-feira': { 
-    img: 'marmita20.png',  // Lasanha (pode usar outra imagem se tiver)
+    img: 'marmita20.png',  // ✅ Usa imagem de sexta (ou marmitex2.jpg se quiser diferente)
     titulo: 'SEXTA: Lasanha de Carne Mussarela 🍝',
     descricao: 'HOJE TEM LASANHA ESPECIAL! 🍝 Arroz + Feijão + Lasanha Recheada + Salada + Farofa - R$ 21,90'
   },
   'sábado': { 
-    img: 'feijoadasabado.jpg',  // ✅ CORRIGIDO - Feijoada do Sábado!
+    img: 'marmitex2.jpg',  // ⭐ ALTEREI PARA IMAGEM QUE EXISTE! Use 'feijoadasabado.jpg' se ela existir
     titulo: 'SÁBADO: Opção Normal OU Feijoada 🍲',
     descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa com Torresmo - R$ 21,90'
   },
   'domingo': { 
-    img: 'logorei.jpg',  // Logo (fechado)
+    img: 'logorei.jpg',  // ✅ Logo (fechado)
     titulo: 'DOMINGO: Volte Amanhã! 🎉',
     descricao: 'HOJE É DOMINGO! 🎉 ESTAMOS FECHADOS. VOLTE SEGUNDA-FEIRA PELO CARDÁPIO ESPECIAL!'
   }
 };
 
-// URL base para imagens
+// URL base para imagens (SUAS imagens reais)
 const IMAGE_BASE = 'https://anshulaprashad.github.io/marmitex/';
 
-// ⚡ Rota PRINCIPAL - O WhatsApp lê ESTA rota primeiro!
+// ⚡ Rota PRINCIPAL - WhatsApp lê ESTA rota!
 app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
-  const hoje = new Date().toLocaleString('pt-BR', { weekday: 'long' }).toLowerCase();
+  const hoje = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', weekday: 'long' }).toLowerCase();
   const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
   const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
 
   console.log('='.repeat(50));
+  console.log(`📅 Data: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`);
   console.log(`📅 Dia da semana: ${hoje}`);
-  console.log(`🤖 User Agent: ${userAgent.substring(0, 80)}`);
+  console.log(`🤖 User Agent: ${userAgent.substring(0, 80)}...`);
   console.log(`🖼️ Imagem do dia: ${cardapio.img}`);
-  console.log(`🔗 URL completa da imagem: ${imageUrl}`);
+  console.log(`🔗 URL da imagem: ${imageUrl}`);
   console.log(`📝 Título: ${cardapio.titulo}`);
 
   // Detecta WhatsApp/Telegram/Facebook/Twitter
   const isBot = /WhatsApp|TelegramBot|facebookexternalhit|Twitterbot|LinkedInBot|Discordbot|Slackbot/i.test(userAgent);
 
   if (isBot) {
-    console.log('🎯 BOT DETECTADO! Gerando preview dinâmico...');
+    console.log('🎯 BOT DETECTADO! Enviando HTML com meta tags dinâmicas...');
     
-    // ⭐⭐ IMPORTANTE: WhatsApp lê ESTE HTML, não faz redirecionamento!
+    // ⭐⭐ CÓDIGO SIMPLIFICADO - Apenas meta tags para WhatsApp
     const htmlPreview = `
 <!DOCTYPE html>
 <html prefix="og: https://ogp.me/ns#" lang="pt-br">
@@ -83,24 +86,23 @@ app.get('/', (req, res) => {
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
-    <meta property="og:title" content="🍱 ${cardapio.titulo} - O REI DA MARMITEX">
+    <meta property="og:title" content="👑 ${cardapio.titulo} - O REI DA MARMITEX">
     <meta property="og:description" content="${cardapio.descricao}">
     <meta property="og:image" content="${imageUrl}">
     <meta property="og:image:secure_url" content="${imageUrl}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="${cardapio.titulo}">
-    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="O REI DA MARMITEX">
     <meta property="og:locale" content="pt_BR">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="🍱 ${cardapio.titulo} - O REI DA MARMITEX">
+    <meta name="twitter:title" content="👑 ${cardapio.titulo} - O REI DA MARMITEX">
     <meta name="twitter:description" content="${cardapio.descricao}">
     <meta name="twitter:image" content="${imageUrl}">
     
-    <!-- ⭐⭐ WhatsApp PRECISA ver este conteúdo SEM redirecionamento! -->
+    <!-- ⭐⭐ IMPORTANTE: WhatsApp NÃO executa JavaScript, então MOSTRE conteúdo -->
     <style>
         body {
             margin: 0;
@@ -112,84 +114,53 @@ app.get('/', (req, res) => {
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        .container {
+            max-width: 800px;
             text-align: center;
         }
-        .preview-box {
-            max-width: 800px;
-            background: rgba(28, 28, 30, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            border: 3px solid #FFD700;
-        }
-        h1 { 
-            color: #FFD700; 
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        h2 {
-            color: #FFF;
-            margin: 20px 0;
-            font-size: 1.5rem;
-        }
-        img { 
-            max-width: 100%; 
+        img {
+            max-width: 100%;
             height: auto;
             border-radius: 15px;
+            border: 4px solid #FFD700;
             margin: 20px 0;
-            border: 3px solid #C41E3A;
-            box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3);
         }
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 15px 0;
-        }
-        .info {
-            background: rgba(255, 204, 0, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+        h1 { color: #FFD700; font-size: 2rem; }
+        p { font-size: 1.2rem; line-height: 1.6; }
+        .emoji { font-size: 3rem; }
     </style>
 </head>
 <body>
-    <div class="preview-box">
+    <div class="container">
+        <div class="emoji">🍱</div>
         <h1>👑 O REI DA MARMITEX</h1>
         <h2>${cardapio.titulo}</h2>
         <p>${cardapio.descricao}</p>
         <img src="${imageUrl}" alt="${cardapio.titulo}">
-        <div class="info">
-            <p>📞 WhatsApp: (11) 99999-9999</p>
-            <p>⏰ Segunda a Sábado: 11h às 21h</p>
-            <p>🚚 Entrega Rápida na Região</p>
-        </div>
+        <p>📞 <strong>WhatsApp:</strong> (11) 99999-9999</p>
+        <p>⏰ <strong>Horário:</strong> Segunda a Sábado, 11h às 21h</p>
+        <p>📍 <strong>Entregamos em toda região!</strong></p>
     </div>
     
-    <!-- ⭐⭐ IMPORTANTE: Script que redireciona usuários normais, mas NÃO WhatsApp -->
+    <!-- ⭐⭐ JavaScript SÓ será executado por navegadores normais -->
     <script>
-        // Verifica se é WhatsApp (WhatsApp não executa JavaScript!)
-        const isWhatsApp = navigator.userAgent.includes('WhatsApp');
-        
-        if (!isWhatsApp) {
-            // Se NÃO for WhatsApp, redireciona para landing page
-            setTimeout(() => {
-                window.location.href = '/landing';
-            }, 100);
-        }
+        // WhatsApp NÃO executa JavaScript, então usuários normais são redirecionados
+        setTimeout(() => {
+            window.location.href = '/landing';
+        }, 50);
     </script>
 </body>
 </html>`;
     
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
+    res.setHeader('Cache-Control', 'public, max-age=300'); // Cache de 5 minutos
     res.send(htmlPreview);
     
   } else {
-    // Usuário normal - redireciona IMEDIATAMENTE para landing
+    // ⭐⭐ Usuário normal - redireciona IMEDIATAMENTE sem mostrar nada
     console.log('👤 Usuário normal detectado, redirecionando para /landing');
-    res.redirect('/landing');
+    res.redirect(302, '/landing');
   }
 });
 
@@ -199,74 +170,77 @@ app.get('/landing', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  const hoje = new Date().toLocaleString('pt-BR', { weekday: 'long' }).toLowerCase();
-  const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
-  
-  res.json({ 
-    status: 'online', 
-    service: 'Rei da Marmitex - Preview Dinâmico',
-    dia_atual: hoje,
-    cardapio_hoje: cardapio.titulo,
-    imagem_hoje: cardapio.img,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Rota para forçar preview de um dia específico (para testes)
-app.get('/preview/:dia', (req, res) => {
+// Rota para testar preview de qualquer dia
+app.get('/test/:dia', (req, res) => {
   const dia = req.params.dia;
-  const cardapio = cardapios[dia] || cardapios['segunda-feira'];
+  const diasValidos = ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo'];
+  const diaTeste = diasValidos.includes(dia) ? dia : 'segunda-feira';
+  const cardapio = cardapios[diaTeste];
   const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
-  
-  console.log(`🧪 Preview forçado: ${dia} - ${cardapio.img}`);
   
   res.send(`
     <!DOCTYPE html>
-    <html prefix="og: https://ogp.me/ns#">
+    <html>
     <head>
-        <meta charset="UTF-8">
         <meta property="og:image" content="${imageUrl}">
-        <meta property="og:title" content="${cardapio.titulo}">
+        <meta property="og:title" content="TESTE: ${cardapio.titulo}">
         <meta property="og:description" content="${cardapio.descricao}">
-        <meta property="og:type" content="website">
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                max-width: 800px;
-                margin: 50px auto;
-                padding: 20px;
-                background: #1a0f0a;
-                color: white;
-            }
-            img {
-                max-width: 100%;
-                border-radius: 15px;
-                border: 3px solid #FFD700;
-            }
-            h1 { color: #FFD700; }
-        </style>
+        <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
+        <style>body{font-family:Arial;padding:20px}</style>
     </head>
     <body>
-        <h1>🧪 Teste de Preview: ${dia}</h1>
+        <h1>🧪 Teste de Preview: ${diaTeste}</h1>
+        <img src="${imageUrl}" width="400">
         <h2>${cardapio.titulo}</h2>
-        <img src="${imageUrl}" width="100%">
         <p>${cardapio.descricao}</p>
         <hr>
-        <p><strong>URL da imagem:</strong> ${imageUrl}</p>
+        <p><strong>URL de Teste WhatsApp:</strong></p>
+        <p><a href="https://api.whatsapp.com/send?text=${encodeURIComponent(`🍱 Confira o cardápio de ${diaTeste}: https://marmitaria-premium.onrender.com/`)}" target="_blank">
+            Testar no WhatsApp
+        </a></p>
     </body>
     </html>
   `);
 });
 
+// Health check com informações do dia
+app.get('/health', (req, res) => {
+  const hoje = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', weekday: 'long' }).toLowerCase();
+  const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
+  
+  res.json({ 
+    status: 'online', 
+    service: 'Rei da Marmitex',
+    dia_atual: hoje,
+    cardapio_hoje: cardapio.titulo,
+    imagem_hoje: cardapio.img,
+    imagem_url_completa: `${IMAGE_BASE}${cardapio.img}`,
+    timestamp: new Date().toISOString(),
+    timezone: 'America/Sao_Paulo'
+  });
+});
+
 // Inicia servidor
 app.listen(PORT, () => {
-  console.log('='.repeat(50));
-  console.log('👑 O REI DA MARMITEX - Sistema de Preview WhatsApp');
-  console.log(`🚀 URL Principal: https://marmitaria-premium.onrender.com/`);
-  console.log(`🎯 Teste Sábado: https://marmitaria-premium.onrender.com/preview/sábado`);
-  console.log(`🎯 Teste Segunda: https://marmitaria-premium.onrender.com/preview/segunda-feira`);
+  console.log('='.repeat(60));
+  console.log('👑 O REI DA MARMITEX - Preview Dinâmico WhatsApp');
+  console.log(`🚀 Servidor rodando na porta: ${PORT}`);
+  console.log(`🔗 URL Principal: https://marmitaria-premium.onrender.com/`);
+  console.log(`🔗 Landing Page: https://marmitaria-premium.onrender.com/landing`);
+  console.log('');
+  console.log('📅 URLs de Teste:');
+  console.log(`🧪 Segunda: https://marmitaria-premium.onrender.com/test/segunda-feira`);
+  console.log(`🧪 Terça: https://marmitaria-premium.onrender.com/test/terça-feira`);
+  console.log(`🧪 Sábado: https://marmitaria-premium.onrender.com/test/sábado`);
   console.log(`💚 Health Check: https://marmitaria-premium.onrender.com/health`);
-  console.log('='.repeat(50));
+  console.log('='.repeat(60));
+  console.log('');
+  console.log('⚠️  IMPORTANTE: Verifique se as imagens existem:');
+  console.log(`🖼️  Segunda: ${IMAGE_BASE}marmita20.png`);
+  console.log(`🖼️  Terça: ${IMAGE_BASE}marmita21.png`);
+  console.log(`🖼️  Quarta: ${IMAGE_BASE}marmita25.png`);
+  console.log(`🖼️  Quinta: ${IMAGE_BASE}marmita24.png`);
+  console.log(`🖼️  Sábado: ${IMAGE_BASE}marmitex2.jpg`);
+  console.log('');
 });
+[file content end]
