@@ -45,7 +45,7 @@ const cardapios = {
 };
 
 // URL da sua landing page REAL
-const LANDING_PAGE_URL = 'https://anshulaprashad.github.io/marmitex/';
+const LANDING_PAGE_URL = 'https://marmitaria-premium.onrender.com';
 
 // Middleware para log
 app.use((req, res, next) => {
