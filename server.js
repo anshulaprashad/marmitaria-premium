@@ -9,37 +9,37 @@ app.use(express.static('public'));
 // ✅ Cardápios da semana com imagens que EXISTEM no seu repositório
 const cardapios = {
   'segunda-feira': { 
-    img: 'marmita20.png',  // ✅ Frango Grelhado
+    img: 'marmita20.png',
     titulo: 'SEGUNDA: Frango Grelhado Especial 🍗',
     descricao: 'HOJE TEM FRANGO GRELHADO! 🍗 Arroz + Feijão + Frango Suculento + Salada Fresca + Farofa Crocante - R$ 21,90'
   },
   'terça-feira': { 
-    img: 'marmita21.png',  // ✅ Carne de Panela
+    img: 'marmita21.png',
     titulo: 'TERÇA: Carne de Panela Desfiada 🥩',
     descricao: 'HOJE TEM CARNE DE PANELA! 🥩 Arroz + Feijão + Carne Macia Desfiada + Salada + Farofa - R$ 21,90'
   },
   'quarta-feira': { 
-    img: 'marmita25.png',  // ✅ Moqueca
+    img: 'marmita25.png',
     titulo: 'QUARTA: Moqueca de Frango Cremosa 🍲',
     descricao: 'HOJE TEM MOQUECA DE FRANGO! 🍲 Arroz + Feijão + Moqueca Cremosa + Salada + Farofa - R$ 21,90'
   },
   'quinta-feira': { 
-    img: 'marmita24.png',  // ✅ Milanesa
+    img: 'marmita24.png',
     titulo: 'QUINTA: Bife à Milanesa Crocante 🥩',
     descricao: 'HOJE TEM BIFE À MILANESA! 🥩 Arroz + Feijão + Milanesa Crocante + Salada + Farofa - R$ 21,90'
   },
   'sexta-feira': { 
-    img: 'marmita20.png',  // ✅ Usa imagem de sexta (ou marmitex2.jpg se quiser diferente)
+    img: 'marmita20.png',
     titulo: 'SEXTA: Lasanha de Carne Mussarela 🍝',
     descricao: 'HOJE TEM LASANHA ESPECIAL! 🍝 Arroz + Feijão + Lasanha Recheada + Salada + Farofa - R$ 21,90'
   },
   'sábado': { 
-    img: 'marmitex2.jpg',  // ⭐ ALTEREI PARA IMAGEM QUE EXISTE! Use 'feijoadasabado.jpg' se ela existir
+    img: 'marmitex2.jpg',
     titulo: 'SÁBADO: Opção Normal OU Feijoada 🍲',
     descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa com Torresmo - R$ 21,90'
   },
   'domingo': { 
-    img: 'logorei.jpg',  // ✅ Logo (fechado)
+    img: 'logorei.jpg',
     titulo: 'DOMINGO: Volte Amanhã! 🎉',
     descricao: 'HOJE É DOMINGO! 🎉 ESTAMOS FECHADOS. VOLTE SEGUNDA-FEIRA PELO CARDÁPIO ESPECIAL!'
   }
@@ -69,7 +69,6 @@ app.get('/', (req, res) => {
   if (isBot) {
     console.log('🎯 BOT DETECTADO! Enviando HTML com meta tags dinâmicas...');
     
-    // ⭐⭐ CÓDIGO SIMPLIFICADO - Apenas meta tags para WhatsApp
     const htmlPreview = `
 <!DOCTYPE html>
 <html prefix="og: https://ogp.me/ns#" lang="pt-br">
@@ -77,11 +76,9 @@ app.get('/', (req, res) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Primary Meta Tags -->
     <title>👑 ${cardapio.titulo} - O REI DA MARMITEX</title>
     <meta name="description" content="${cardapio.descricao}">
     
-    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
     <meta property="og:title" content="👑 ${cardapio.titulo} - O REI DA MARMITEX">
@@ -92,15 +89,12 @@ app.get('/', (req, res) => {
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="${cardapio.titulo}">
     <meta property="og:site_name" content="O REI DA MARMITEX">
-    <meta property="og:locale" content="pt_BR">
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="👑 ${cardapio.titulo} - O REI DA MARMITEX">
     <meta name="twitter:description" content="${cardapio.descricao}">
     <meta name="twitter:image" content="${imageUrl}">
     
-    <!-- ⭐⭐ IMPORTANTE: WhatsApp NÃO executa JavaScript, então MOSTRE conteúdo -->
     <style>
         body {
             margin: 0;
@@ -141,7 +135,6 @@ app.get('/', (req, res) => {
         <p>📍 <strong>Entregamos em toda região!</strong></p>
     </div>
     
-    <!-- ⭐⭐ JavaScript SÓ será executado por navegadores normais -->
     <script>
         // WhatsApp NÃO executa JavaScript, então usuários normais são redirecionados
         setTimeout(() => {
@@ -152,11 +145,10 @@ app.get('/', (req, res) => {
 </html>`;
     
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, max-age=300'); // Cache de 5 minutos
+    res.setHeader('Cache-Control', 'public, max-age=300');
     res.send(htmlPreview);
     
   } else {
-    // ⭐⭐ Usuário normal - redireciona IMEDIATAMENTE sem mostrar nada
     console.log('👤 Usuário normal detectado, redirecionando para /landing');
     res.redirect(302, '/landing');
   }
@@ -232,13 +224,4 @@ app.listen(PORT, () => {
   console.log(`🧪 Sábado: https://marmitaria-premium.onrender.com/test/sábado`);
   console.log(`💚 Health Check: https://marmitaria-premium.onrender.com/health`);
   console.log('='.repeat(60));
-  console.log('');
-  console.log('⚠️  IMPORTANTE: Verifique se as imagens existem:');
-  console.log(`🖼️  Segunda: ${IMAGE_BASE}marmita20.png`);
-  console.log(`🖼️  Terça: ${IMAGE_BASE}marmita21.png`);
-  console.log(`🖼️  Quarta: ${IMAGE_BASE}marmita25.png`);
-  console.log(`🖼️  Quinta: ${IMAGE_BASE}marmita24.png`);
-  console.log(`🖼️  Sábado: ${IMAGE_BASE}marmitex2.jpg`);
-  console.log('');
 });
-[file content end]
