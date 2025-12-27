@@ -86,8 +86,43 @@
             }
         }
         
+        /* ESTILO DO BOTÃO DE COMPARTILHAMENTO */
+        .share-button-container {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .share-button {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: 2px solid #fff;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .share-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        .share-text {
+            color: var(--tg);
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
         @media (max-width: 768px){
-            .carousel-container{height:400px;border-radius:20px;border-width:6px;margin-top:20px;margin-bottom:20px}.tamanhos-card{padding:25px}.tamanho-preco{font-size:2.2rem}.hero h2{font-size:2rem}.hero p{font-size:1.1rem;margin-bottom:20px}.btn-pedir-whatsapp{font-size:1.1rem;padding:15px}.header-container{flex-direction:column;gap:20px}.cardapio-dia-hero{padding:20px}.cardapio-dia-hero h3{font-size:1.5rem}.cardapio-dia-hero ul{font-size:1rem}.dia-tag-hero{top:10px;right:10px;padding:6px 15px;font-size:14px}.carousel-nav{width:40px;height:40px;font-size:18px}.carousel-nav.prev{left:10px}.carousel-nav.next{right:10px}.slide-counter{top:10px;right:10px;padding:6px 12px;font-size:12px}}@media (max-width:480px){.carousel-container{height:300px;border-width:4px}.carousel-dot{width:8px;height:8px}.tamanhos-card{padding:20px 15px;border-radius:20px}.tamanho-item{padding:15px 10px;min-height:160px}.tamanho-nome{font-size:1.1rem}.tamanho-preco{font-size:1.6rem}.btn-pedir-whatsapp{padding:14px;font-size:.9rem;border-radius:10px}.hero p{font-size:1rem;margin-bottom:15px}.badge{padding:10px 20px;font-size:14px;margin-bottom:15px}.cardapio-dia-hero{padding:15px}.cardapio-dia-hero h3{font-size:1.3rem}.cardapio-dia-hero ul{font-size:.9rem;padding-left:20px}}@media (max-width:320px){.btn-pedir-whatsapp{font-size:.85rem;padding:12px 8px;white-space:normal;line-height:1.2}.tamanho-nome{font-size:1rem}.tamanho-preco{font-size:1.4rem}.carousel-container{height:250px}}@media (min-width:1024px){.tamanhos-card{padding:30px}.btn-pedir-whatsapp{padding:18px;font-size:1.1rem}.carousel-container{height:600px}.whatsapp-btn-final{padding:20px 40px;font-size:1.3rem}}
+            .carousel-container{height:400px;border-radius:20px;border-width:6px;margin-top:20px;margin-bottom:20px}.tamanhos-card{padding:25px}.tamanho-preco{font-size:2.2rem}.hero h2{font-size:2rem}.hero p{font-size:1.1rem;margin-bottom:20px}.btn-pedir-whatsapp{font-size:1.1rem;padding:15px}.header-container{flex-direction:column;gap:20px}.cardapio-dia-hero{padding:20px}.cardapio-dia-hero h3{font-size:1.5rem}.cardapio-dia-hero ul{font-size:1rem}.dia-tag-hero{top:10px;right:10px;padding:6px 15px;font-size:14px}.carousel-nav{width:40px;height:40px;font-size:18px}.carousel-nav.prev{left:10px}.carousel-nav.next{right:10px}.slide-counter{top:10px;right:10px;padding:6px 12px;font-size:12px}.share-button{padding:12px 24px;font-size:15px}}@media (max-width:480px){.carousel-container{height:300px;border-width:4px}.carousel-dot{width:8px;height:8px}.tamanhos-card{padding:20px 15px;border-radius:20px}.tamanho-item{padding:15px 10px;min-height:160px}.tamanho-nome{font-size:1.1rem}.tamanho-preco{font-size:1.6rem}.btn-pedir-whatsapp{padding:14px;font-size:.9rem;border-radius:10px}.hero p{font-size:1rem;margin-bottom:15px}.badge{padding:10px 20px;font-size:14px;margin-bottom:15px}.cardapio-dia-hero{padding:15px}.cardapio-dia-hero h3{font-size:1.3rem}.cardapio-dia-hero ul{font-size:.9rem;padding-left:20px}.share-button{padding:10px 20px;font-size:14px;gap:8px}}@media (max-width:320px){.btn-pedir-whatsapp{font-size:.85rem;padding:12px 8px;white-space:normal;line-height:1.2}.tamanho-nome{font-size:1rem}.tamanho-preco{font-size:1.4rem}.carousel-container{height:250px}.share-button{padding:8px 16px;font-size:13px;gap:6px}}@media (min-width:1024px){.tamanhos-card{padding:30px}.btn-pedir-whatsapp{padding:18px;font-size:1.1rem}.carousel-container{height:600px}.whatsapp-btn-final{padding:20px 40px;font-size:1.3rem}.share-button{padding:16px 32px;font-size:17px}}
         /* ADICIONADO: DIREITOS AUTORAIS - NÃO COPIAR */
         body::after{content:'© 2024 - Landing Page Premium desenvolvida por [SEU NOME]. Proibida cópia não autorizada.';position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,.8);color:#fff;text-align:center;padding:5px;font-size:10px;z-index:99999;opacity:0;pointer-events:none}
         
@@ -335,6 +370,14 @@
         <p>🍚 <strong>👑 O REI DA MARMITEX</strong> &copy; 2024 - Todos os direitos reservados</p>
         <p>📍 Entregamos em toda região | ⏰ Funcionamos de Segunda a Sábado, 11h às 21h</p>
         <p>📞 Telefone: (11) 99999-9999 | 📍 Endereço: Rua da Fome, 123 - Centro</p>
+        
+        <!-- Botão de Compartilhamento -->
+        <div class="share-button-container">
+            <button onclick="compartilharWhatsAppComPreview()" class="share-button">
+                <i class="fab fa-whatsapp"></i> COMPARTILHAR CARDÁPIO
+            </button>
+            <p class="share-text">Compartilhe nosso cardápio especial com seus amigos!</p>
+        </div>
     </footer>
 
     <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
@@ -710,6 +753,22 @@
         if(cc){
             cc.addEventListener('mouseenter',stAP);
             cc.addEventListener('mouseleave',sAP);
+        }
+        
+        // === BOTÃO DE COMPARTILHAMENTO COM PREVIEW ===
+        function compartilharWhatsAppComPreview() {
+            const hoje = new Date();
+            const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sábado'];
+            const dia = dias[hoje.getDay()];
+            
+            // URL do seu backend no Render
+            const urlPreview = 'https://rei-marmitex.onrender.com/?preview=sim';
+            
+            // Texto personalizado
+            const texto = `🍱 OLÁ! CONFIRA O CARDÁPIO DE HOJE DO REI DA MARMITEX! 👑\n\n🔗 ${urlPreview}\n\n🎯 CARDÁPIO DIFERENTE CADA DIA!\n📞 (11) 99999-9999`;
+            
+            // Abre WhatsApp
+            window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
         }
         
         function initLandingPage(){
