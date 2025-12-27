@@ -34,7 +34,7 @@ const cardapios = {
     descricao: 'HOJE TEM LASANHA ESPECIAL! 🍝 Arroz + Feijão + Lasanha Recheada + Salada + Farofa - R$ 21,90'
   },
   'sábado': { 
-    img: 'marmitex2.jpg',
+    img: 'feijoadasabado.jpg',  // ⭐⭐ CORRIGIDO: feijoadasabado.jpg para sábado
     titulo: 'SÁBADO: Opção Normal OU Feijoada 🍲',
     descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa com Torresmo - R$ 21,90'
   },
@@ -176,18 +176,73 @@ app.get('/test/:dia', (req, res) => {
         <meta property="og:title" content="TESTE: ${cardapio.titulo}">
         <meta property="og:description" content="${cardapio.descricao}">
         <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
-        <style>body{font-family:Arial;padding:20px}</style>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                background: #1a0f0a;
+                color: white;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            h1 { color: #FFD700; }
+            img { 
+                max-width: 100%; 
+                border-radius: 15px;
+                border: 4px solid #FFD700;
+                margin: 20px 0;
+            }
+            .test-link {
+                display: inline-block;
+                background: #25D366;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                text-decoration: none;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <h1>🧪 Teste de Preview: ${diaTeste}</h1>
-        <img src="${imageUrl}" width="400">
+        <img src="${imageUrl}" alt="${cardapio.titulo}">
         <h2>${cardapio.titulo}</h2>
         <p>${cardapio.descricao}</p>
         <hr>
-        <p><strong>URL de Teste WhatsApp:</strong></p>
-        <p><a href="https://api.whatsapp.com/send?text=${encodeURIComponent(`🍱 Confira o cardápio de ${diaTeste}: https://marmitaria-premium.onrender.com/`)}" target="_blank">
-            Testar no WhatsApp
-        </a></p>
+        <p><strong>URL da imagem:</strong> ${imageUrl}</p>
+        <p><strong>Teste no WhatsApp:</strong></p>
+        <a class="test-link" href="https://api.whatsapp.com/send?text=${encodeURIComponent(`🍱 Confira o cardápio de ${diaTeste}: ${cardapio.titulo} - https://marmitaria-premium.onrender.com/`)}" target="_blank">
+            📱 Testar no WhatsApp
+        </a>
+    </body>
+    </html>
+  `);
+});
+
+// Rota para verificar se a imagem de sábado existe
+app.get('/verificar-imagem-sabado', (req, res) => {
+  const imageUrl = 'https://anshulaprashad.github.io/marmitex/feijoadasabado.jpg';
+  
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Verificação da Imagem de Sábado</title>
+        <style>
+            body { font-family: Arial; padding: 20px; }
+            .success { color: green; font-weight: bold; }
+            .error { color: red; font-weight: bold; }
+            img { max-width: 100%; border: 2px solid #ccc; }
+        </style>
+    </head>
+    <body>
+        <h1>Verificando imagem de sábado</h1>
+        <p><strong>URL:</strong> ${imageUrl}</p>
+        <img src="${imageUrl}" alt="Imagem de feijoada" onload="document.getElementById('status').className='success'; document.getElementById('status').innerText='✅ IMAGEM CARREGADA COM SUCESSO!'" onerror="document.getElementById('status').className='error'; document.getElementById('status').innerText='❌ ERRO AO CARREGAR IMAGEM!'">
+        <p id="status">Carregando imagem...</p>
+        <p>Se mostrar erro, a imagem não existe no repositório.</p>
+        <p>Se mostrar sucesso, está tudo certo para o deploy.</p>
     </body>
     </html>
   `);
@@ -222,6 +277,17 @@ app.listen(PORT, () => {
   console.log(`🧪 Segunda: https://marmitaria-premium.onrender.com/test/segunda-feira`);
   console.log(`🧪 Terça: https://marmitaria-premium.onrender.com/test/terça-feira`);
   console.log(`🧪 Sábado: https://marmitaria-premium.onrender.com/test/sábado`);
+  console.log(`🖼️ Verificar imagem sábado: https://marmitaria-premium.onrender.com/verificar-imagem-sabado`);
   console.log(`💚 Health Check: https://marmitaria-premium.onrender.com/health`);
   console.log('='.repeat(60));
+  console.log('');
+  console.log('📅 IMAGENS CONFIGURADAS:');
+  console.log(`🖼️ Segunda: ${IMAGE_BASE}marmita20.png`);
+  console.log(`🖼️ Terça: ${IMAGE_BASE}marmita21.png`);
+  console.log(`🖼️ Quarta: ${IMAGE_BASE}marmita25.png`);
+  console.log(`🖼️ Quinta: ${IMAGE_BASE}marmita24.png`);
+  console.log(`🖼️ Sexta: ${IMAGE_BASE}marmita20.png`);
+  console.log(`🖼️ Sábado: ${IMAGE_BASE}feijoadasabado.jpg ⭐ NOVO!`);
+  console.log(`🖼️ Domingo: ${IMAGE_BASE}logorei.jpg`);
+  console.log('');
 });
