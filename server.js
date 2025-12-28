@@ -242,7 +242,7 @@ app.get('/', (req, res) => {
     <script>
         setTimeout(function() {
             if (!navigator.userAgent.match(/bot|crawler|spider/i)) {
-                window.location.href = '/landing';
+                window.location.href = '/index';
             }
         }, 3000);
     </script>
@@ -256,14 +256,14 @@ app.get('/', (req, res) => {
     res.send(htmlPreview);
     
   } else {
-    console.log('👤 Usuário normal, redirecionando para landing...');
-    res.redirect(302, '/landing');
+    console.log('👤 Usuário normal, redirecionando para index...');
+    res.redirect(302, '/index');
   }
 });
 
-// 🌐 Landing page
-app.get('/landing', (req, res) => {
-  console.log('🌐 Servindo landing page...');
+// 🌐 index
+app.get('/index', (req, res) => {
+  console.log('🌐 Servindo index...');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -355,7 +355,7 @@ app.listen(PORT, () => {
   console.log('👑 O REI DA MARMITEX - Preview Dinâmico WhatsApp');
   console.log(`🚀 Servidor rodando na porta: ${PORT}`);
   console.log(`🔗 URL Principal: https://marmitaria-premium.onrender.com/`);
-  console.log(`🌐 Landing Page: https://marmitaria-premium.onrender.com/landing`);
+  console.log(`🌐 index: https://marmitaria-premium.onrender.com/index`);
   console.log(`📅 Horário Brasil: ${agoraBR}`);
   console.log(`📅 Dia atual (BR): ${diaBR}`);
   console.log(`⏰ Fuso horário: America/Sao_Paulo (UTC-3)`);
