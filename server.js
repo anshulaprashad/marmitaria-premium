@@ -3,46 +3,44 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ✅ Cardápios da semana
+// ✅ Cardápios da semana COM URLS COMPLETAS
 const cardapios = {
   'segunda-feira': { 
-    img: 'marmita20.png',
+    img: 'https://anshulaprashad.github.io/marmitex/marmita20.png',
     titulo: 'SEGUNDA: Frango Grelhado Especial 🍗',
     descricao: 'HOJE TEM FRANGO GRELHADO! 🍗 Arroz + Feijão + Frango Suculento + Salada Fresca + Farofa Crocante - R$ 21,90'
   },
   'terça-feira': { 
-    img: 'marmita21.png',
+    img: 'https://anshulaprashad.github.io/marmitex/marmita21.png',
     titulo: 'TERÇA: Carne de Panela Desfiada 🥩',
     descricao: 'HOJE TEM CARNE DE PANELA! 🥩 Arroz + Feijão + Carne Macia Desfiada + Salada + Farofa - R$ 21,90'
   },
   'quarta-feira': { 
-    img: 'marmita25.png',
+    img: 'https://anshulaprashad.github.io/marmitex/marmita25.png',
     titulo: 'QUARTA: Moqueca de Frango Cremosa 🍲',
     descricao: 'HOJE TEM MOQUECA DE FRANGO! 🍲 Arroz + Feijão + Moqueca Cremosa + Salada + Farofa - R$ 21,90'
   },
   'quinta-feira': { 
-    img: 'marmita24.png',
+    img: 'https://anshulaprashad.github.io/marmitex/marmita24.png',
     titulo: 'QUINTA: Bife à Milanesa Crocante 🥩',
     descricao: 'HOJE TEM BIFE À MILANESA! 🥩 Arroz + Feijão + Milanesa Crocante + Salada + Farofa - R$ 21,90'
   },
   'sexta-feira': { 
-    img: 'marmita20.png',
+    img: 'https://anshulaprashad.github.io/marmitex/marmita20.png',
     titulo: 'SEXTA: Lasanha de Carne Mussarela 🍝',
     descricao: 'HOJE TEM LASANHA ESPECIAL! 🍝 Arroz + Feijão + Lasanha Recheada + Salada + Farofa - R$ 21,90'
   },
   'sábado': { 
-    img: 'feijoadasabado.jpg',
+    img: 'https://anshulaprashad.github.io/marmitex/feijoadasabado.jpg',
     titulo: 'SÁBADO: Opção Normal OU Feijoada 🍲',
     descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa com Torresmo - R$ 21,90'
   },
   'domingo': { 
-    img: 'menudomingo.jpg',
+    img: 'https://anshulaprashad.github.io/marmitaria-premium/menudomingo.jpg',
     titulo: 'DOMINGO: Menu Especial 🍽️',
-    descricao: 'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne Bovina + Linguiça + Macarrão com Calabresa + Maionese'
+    descricao: 'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne Bovina + Linguiça + Macarrão com Calabresa + Maionese - R$ 21,90'
   }
 };
-
-const IMAGE_BASE = 'https://anshulaprashad.github.io/marmitex/';
 
 // ✅ CORRIGIDO: Usa fuso horário de São Paulo (Brasil)
 function obterDiaSemana() {
@@ -81,7 +79,7 @@ app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
   const hoje = obterDiaSemana();
   const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
-  const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
+  const imageUrl = cardapio.img;
   const timestamp = Date.now();
   const imageUrlComCache = `${imageUrl}?v=${timestamp}`;
 
@@ -273,7 +271,7 @@ app.get('/test/:dia', (req, res) => {
   const diasValidos = ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo'];
   const diaTeste = diasValidos.includes(dia) ? dia : 'segunda-feira';
   const cardapio = cardapios[diaTeste];
-  const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
+  const imageUrl = cardapio.img;
   
   res.send(`
 <!DOCTYPE html>
@@ -337,7 +335,7 @@ app.get('/health', (req, res) => {
     dia_atual: hoje,
     cardapio_hoje: cardapio.titulo,
     imagem_hoje: cardapio.img,
-    imagem_url_completa: `${IMAGE_BASE}${cardapio.img}`,
+    imagem_url_completa: cardapio.img,
     timestamp: new Date().toISOString(),
     horario_brasil: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
   });
