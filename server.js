@@ -38,7 +38,7 @@ const cardapios = {
   'domingo': { 
     img: 'https://anshulaprashad.github.io/marmitaria-premium/menudomingo.jpg',
     titulo: 'DOMINGO: Menu Especial 🍽️',
-    descricao: 'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne Bovina + Linguiça + Macarrão com Calabresa + Maionese - R$ 21,90'
+    descricao: 'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne Bovina + Linguiça + Macarrão com Calabresa + Maionese'
   }
 };
 
@@ -79,9 +79,7 @@ app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
   const hoje = obterDiaSemana();
   const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
-  const imageUrl = cardapio.img;
-  const timestamp = Date.now();
-  const imageUrlComCache = `${imageUrl}?v=${timestamp}`;
+  const imageUrl = cardapio.img; // ✅ URL direta, sem concatenação
 
   console.log('='.repeat(60));
   console.log(`📅 Data/Hora BRASIL: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`);
@@ -110,8 +108,8 @@ app.get('/', (req, res) => {
     <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
     <meta property="og:title" content="🍱 ${cardapio.titulo}">
     <meta property="og:description" content="${cardapio.descricao}">
-    <meta property="og:image" content="${imageUrlComCache}">
-    <meta property="og:image:secure_url" content="${imageUrlComCache}">
+    <meta property="og:image" content="${imageUrl}">
+    <meta property="og:image:secure_url" content="${imageUrl}">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -123,7 +121,7 @@ app.get('/', (req, res) => {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🍱 ${cardapio.titulo}">
     <meta name="twitter:description" content="${cardapio.descricao}">
-    <meta name="twitter:image" content="${imageUrlComCache}">
+    <meta name="twitter:image" content="${imageUrl}">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
