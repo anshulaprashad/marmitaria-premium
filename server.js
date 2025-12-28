@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 10000;
 // ✅ Cardápios da semana COM URLS COMPLETAS
 const cardapios = {
   'segunda-feira': { 
-    img: 'https://anshulaprashad.github.io/marmitex/marmita20.png',
+    img: 'https://anshulaprashad.github.io/marmitaria-premium/menusegunda.jpg',
     titulo: 'SEGUNDA: Frango Grelhado Especial 🍗',
     descricao: 'HOJE TEM FRANGO GRELHADO! 🍗 Arroz + Feijão + Frango Suculento + Salada Fresca + Farofa Crocante - R$ 21,90'
   },
