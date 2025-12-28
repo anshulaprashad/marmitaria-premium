@@ -396,11 +396,6 @@
             const dA=h.getDay();
             const dN=d[dA];
             
-            if(dA===0){
-                aTD();
-                return;
-            }
-            
             aTCd(dN);
             
             const c={
@@ -497,6 +492,24 @@
                     imagem:'https://anshulaprashad.github.io/marmitex/marmitex2.jpg',
                     ogTitle:'🍱 SÁBADO ESPECIAL: Opção Normal OU Feijoada - O REI DA MARMITEX',
                     ogDesc:'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa - R$ 21,90'
+                },
+                domingo:{
+                    tag:'DOMINGO',
+                    emoji:'🍽️🎉',
+                    titulo:'🍽️ Domingo Especial',
+                    itens:[
+                        '🍚 Arroz Branco Soltinho',
+                        '🥘 Feijão Carioca',
+                        '🥩 Carne Bovina Assada',
+                        '🍗 Linguiça de Frango',
+                        '🍝 Macarrão com Calabresa',
+                        '🧅 Refogado de Legumes',
+                        '🥗 Maionese'
+                    ],
+                    mensagem:'🎉 Domingo especial em família! 🍽️',
+                    imagem:'https://anshulaprashad.github.io/marmitaria-premium/menudomingo.jpg',
+                    ogTitle:'🍽️ DOMINGO: Menu Especial - O REI DA MARMITEX',
+                    ogDesc:'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne + Linguiça + Macarrão'
                 }
             };
             
@@ -576,6 +589,7 @@
             
             if(t){
                 const e={
+                    domingo:'🍽️',
                     segunda:'🍗',
                     terca:'🥩',
                     quarta:'🐔',
@@ -585,6 +599,7 @@
                 };
                 const em=e[d]||'🍱';
                 const nd={
+                    domingo:'DOMINGO',
                     segunda:'SEGUNDA-FEIRA',
                     terca:'TERÇA-FEIRA',
                     quarta:'QUARTA-FEIRA',
@@ -598,13 +613,6 @@
             if(b){
                 b.innerHTML=`🎯 CARDÁPIO DE ${d.toUpperCase()}!`;
             }
-        }
-        
-        function aTD(){
-            const t=document.getElementById('titulo-dia');
-            const b=document.getElementById('badge-dia');
-            if(t)t.innerHTML=`HOJE É DOMINGO! 🎉VOLTE AMANHÃ PELO CARDÁPIO!`;
-            if(b)b.innerHTML=`🎯 VOLTE SEGUNDA PELO CARDÁPIO ESPECIAL!`;
         }
         
         function iC(){
