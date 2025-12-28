@@ -3,10 +3,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Serve arquivos estáticos
-app.use(express.static('public'));
+// ❌ NÃO COLOQUE app.use(express.static('public')) AQUI NO TOPO!
 
-// ✅ Cardápios da semana com imagens reais
+// ✅ Cardápios da semana
 const cardapios = {
   'segunda-feira': { 
     img: 'marmita20.png',
@@ -47,21 +46,18 @@ const cardapios = {
 
 const IMAGE_BASE = 'https://anshulaprashad.github.io/marmitex/';
 
-// 🎯 Função para obter o dia da semana em português
 function obterDiaSemana() {
   const dias = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
   const hoje = new Date();
   return dias[hoje.getDay()];
 }
 
-// ⚡ ROTA PRINCIPAL - WhatsApp lê ESTA rota!
+// ⚡ ROTA PRINCIPAL - DEVE VIR ANTES DO express.static()
 app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'] || '';
   const hoje = obterDiaSemana();
   const cardapio = cardapios[hoje] || cardapios['segunda-feira'];
   const imageUrl = `${IMAGE_BASE}${cardapio.img}`;
-  
-  // Adiciona timestamp para evitar cache do WhatsApp
   const timestamp = Date.now();
   const imageUrlComCache = `${imageUrl}?v=${timestamp}`;
 
@@ -71,14 +67,12 @@ app.get('/', (req, res) => {
   console.log(`🤖 User Agent: ${userAgent.substring(0, 100)}...`);
   console.log(`🖼️ Imagem do dia: ${cardapio.img}`);
   console.log(`🔗 URL da imagem: ${imageUrl}`);
-  console.log(`📝 Título: ${cardapio.titulo}`);
   console.log('='.repeat(60));
 
-  // Detecta bots (WhatsApp, Telegram, Facebook, etc)
   const isBot = /WhatsApp|TelegramBot|facebookexternalhit|Twitterbot|LinkedInBot|Discordbot|Slackbot|bot|crawler|spider/i.test(userAgent);
 
   if (isBot) {
-    console.log('✅ BOT DETECTADO! Enviando HTML otimizado para preview...');
+    console.log('✅ BOT DETECTADO! Enviando HTML com meta tags...');
     
     const htmlPreview = `<!DOCTYPE html>
 <html prefix="og: https://ogp.me/ns#" lang="pt-br">
@@ -86,7 +80,6 @@ app.get('/', (req, res) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Básico -->
     <title>🍱 ${cardapio.titulo} - O REI DA MARMITEX</title>
     <meta name="description" content="${cardapio.descricao}">
     
@@ -109,9 +102,6 @@ app.get('/', (req, res) => {
     <meta name="twitter:title" content="🍱 ${cardapio.titulo}">
     <meta name="twitter:description" content="${cardapio.descricao}">
     <meta name="twitter:image" content="${imageUrlComCache}">
-    
-    <!-- Telegram -->
-    <meta property="telegram:channel" content="@reidamarmitex">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -226,7 +216,6 @@ app.get('/', (req, res) => {
     </div>
     
     <script>
-        // Redireciona apenas usuários reais (não bots)
         setTimeout(function() {
             if (!navigator.userAgent.match(/bot|crawler|spider/i)) {
                 window.location.href = '/landing';
@@ -243,18 +232,18 @@ app.get('/', (req, res) => {
     res.send(htmlPreview);
     
   } else {
-    console.log('👤 Usuário normal, redirecionando para landing page...');
+    console.log('👤 Usuário normal, redirecionando para landing...');
     res.redirect(302, '/landing');
   }
 });
 
-// 🌐 Landing page completa
+// 🌐 Landing page
 app.get('/landing', (req, res) => {
-  console.log('🌐 Servindo landing page completa...');
+  console.log('🌐 Servindo landing page...');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 🧪 Rota para testar preview de qualquer dia
+// 🧪 Rotas de teste
 app.get('/test/:dia', (req, res) => {
   const dia = req.params.dia;
   const diasValidos = ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo'];
@@ -271,127 +260,35 @@ app.get('/test/:dia', (req, res) => {
     <meta property="og:image" content="${imageUrl}">
     <meta property="og:title" content="🍱 ${cardapio.titulo}">
     <meta property="og:description" content="${cardapio.descricao}">
-    <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
-    <meta property="og:type" content="website">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             padding: 30px;
             background: #1a0f0a;
             color: white;
             max-width: 900px;
             margin: 0 auto;
         }
-        h1 { color: #FFD700; margin-bottom: 30px; }
-        .card {
-            background: rgba(44, 44, 46, 0.9);
-            border: 2px solid #FFD700;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-        }
+        h1 { color: #FFD700; }
         img { 
             max-width: 100%; 
-            border-radius: 15px;
             border: 4px solid #FFD700;
+            border-radius: 15px;
             margin: 20px 0;
-            display: block;
         }
-        .info {
-            background: rgba(255, 215, 0, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            border-left: 4px solid #FFD700;
-        }
-        .test-link {
-            display: inline-block;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            margin: 10px 5px;
-            font-weight: bold;
-            transition: transform 0.3s ease;
-        }
-        .test-link:hover {
-            transform: translateY(-3px);
-        }
-        code {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #FFD700;
-        }
-        .success { color: #34C759; }
-        .warning { color: #FF9500; }
     </style>
 </head>
 <body>
-    <h1>🧪 Teste de Preview - ${diaTeste}</h1>
-    
-    <div class="card">
-        <h2>${cardapio.titulo}</h2>
-        <img src="${imageUrl}" alt="${cardapio.titulo}" onerror="this.style.border='4px solid red'; this.alt='❌ ERRO AO CARREGAR IMAGEM';">
-        <p>${cardapio.descricao}</p>
-    </div>
-    
-    <div class="card">
-        <h3>📋 Informações Técnicas</h3>
-        <div class="info">
-            <strong>Dia testado:</strong> <code>${diaTeste}</code>
-        </div>
-        <div class="info">
-            <strong>Imagem:</strong> <code>${cardapio.img}</code>
-        </div>
-        <div class="info">
-            <strong>URL completa:</strong><br>
-            <code>${imageUrl}</code>
-        </div>
-        <div class="info">
-            <strong>Meta OG:Image:</strong> <span class="success">✅ Configurada</span>
-        </div>
-    </div>
-    
-    <div class="card">
-        <h3>🧪 Testar Preview</h3>
-        <p>Clique nos botões abaixo para testar o preview em diferentes plataformas:</p>
-        
-        <a class="test-link" href="https://api.whatsapp.com/send?text=${encodeURIComponent(`Confira o cardápio de ${diaTeste}: https://marmitaria-premium.onrender.com/`)}" target="_blank">
-            📱 Testar no WhatsApp
-        </a>
-        
-        <a class="test-link" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://marmitaria-premium.onrender.com/')}" target="_blank">
-            👥 Testar no Facebook
-        </a>
-        
-        <a class="test-link" href="https://developers.facebook.com/tools/debug/?q=${encodeURIComponent('https://marmitaria-premium.onrender.com/')}" target="_blank">
-            🔍 Debug Facebook/WhatsApp
-        </a>
-    </div>
-    
-    <div class="card">
-        <h3>⚠️ Importante sobre Cache do WhatsApp</h3>
-        <p class="warning">
-            O WhatsApp faz cache agressivo das previews. Se você já compartilhou o link antes, 
-            pode levar até 7 dias para o WhatsApp atualizar o preview.
-        </p>
-        <p>
-            <strong>Soluções:</strong><br>
-            1. Use o Facebook Debugger (botão acima) para limpar o cache<br>
-            2. Teste com um link nunca compartilhado antes<br>
-            3. Adicione parâmetros à URL: <code>?dia=${diaTeste}</code>
-        </p>
-    </div>
+    <h1>🧪 Teste: ${diaTeste}</h1>
+    <img src="${imageUrl}" alt="${cardapio.titulo}">
+    <h2>${cardapio.titulo}</h2>
+    <p>${cardapio.descricao}</p>
+    <p><strong>URL da imagem:</strong> ${imageUrl}</p>
 </body>
 </html>
   `);
 });
 
-// 💚 Health check
 app.get('/health', (req, res) => {
   const hoje = obterDiaSemana();
   const cardapio = cardapios[hoje];
@@ -403,20 +300,12 @@ app.get('/health', (req, res) => {
     cardapio_hoje: cardapio.titulo,
     imagem_hoje: cardapio.img,
     imagem_url_completa: `${IMAGE_BASE}${cardapio.img}`,
-    timestamp: new Date().toISOString(),
-    timezone: 'America/Sao_Paulo',
-    preview_disponivel: true
+    timestamp: new Date().toISOString()
   });
 });
 
-// 🔄 Rota para forçar atualização de cache
-app.get('/preview-fresh', (req, res) => {
-  const hoje = obterDiaSemana();
-  const cardapio = cardapios[hoje];
-  const timestamp = Date.now();
-  
-  res.redirect(301, `/?refresh=${timestamp}`);
-});
+// ✅ AGORA SIM: Serve arquivos estáticos DEPOIS das rotas
+app.use(express.static('public'));
 
 // 🚀 Inicia servidor
 app.listen(PORT, () => {
@@ -425,20 +314,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta: ${PORT}`);
   console.log(`🔗 URL Principal: https://marmitaria-premium.onrender.com/`);
   console.log(`🌐 Landing Page: https://marmitaria-premium.onrender.com/landing`);
-  console.log('');
-  console.log('📅 URLs de Teste por Dia:');
-  console.log(`   Segunda: /test/segunda-feira`);
-  console.log(`   Terça: /test/terça-feira`);
-  console.log(`   Quarta: /test/quarta-feira`);
-  console.log(`   Quinta: /test/quinta-feira`);
-  console.log(`   Sexta: /test/sexta-feira`);
-  console.log(`   Sábado: /test/sábado`);
-  console.log(`   Domingo: /test/domingo`);
-  console.log('');
-  console.log('🛠️ Ferramentas:');
-  console.log(`   💚 Health: /health`);
-  console.log(`   🔄 Preview Fresh: /preview-fresh`);
-  console.log('');
   console.log(`📅 Dia atual: ${obterDiaSemana()}`);
   console.log('='.repeat(60));
 });
