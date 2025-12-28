@@ -36,9 +36,9 @@ const cardapios = {
     descricao: 'SÁBADO COM DUPLA OPÇÃO! 🍱 Escolha entre Marmitex Normal ou Feijoada Completa com Torresmo - R$ 21,90'
   },
   'domingo': { 
-    img: 'logorei.jpg',
-    titulo: 'DOMINGO: Volte Amanhã! 🎉',
-    descricao: 'HOJE É DOMINGO! 🎉 ESTAMOS FECHADOS. VOLTE SEGUNDA-FEIRA PELO CARDÁPIO ESPECIAL!'
+    img: 'menudomingo.jpg',
+    titulo: 'DOMINGO: Menu Especial 🍽️',
+    descricao: 'DOMINGO TEM CARDÁPIO ESPECIAL! 🍽️ Arroz + Feijão + Carne Bovina + Linguiça + Macarrão com Calabresa + Maionese'
   }
 };
 
