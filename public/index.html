@@ -9,14 +9,6 @@
     <link rel="preload" href="https://anshulaprashad.github.io/marmitex/logorei.jpg" as="image" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <meta property="og:url" content="https://marmitaria-premium.onrender.com/">
-    <meta property="og:type" content="website">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-
     <!-- PROTEGER CÓDIGO CSS COM MÍNIFICATION INLINE -->
     <style>
         /* NÃO REMOVA ESTE COMENTÁRIO: CÓDIGO PROTEGIDO POR DIREITOS AUTORAIS © 2024 */
@@ -575,9 +567,6 @@
                 setTimeout(() => {
                     cc.style.opacity = '1';
                 }, 50);
-                
-                // Atualiza Meta Tags Open Graph
-                uOM(cD);
             }
         }
         
@@ -669,25 +658,6 @@
         
         function stAP(){
             clearInterval(sI);
-        }
-        
-        // Atualiza Meta Tags Open Graph dinamicamente
-        function uOM(cardapio){
-            const ogImg=document.getElementById('og-image');
-            const ogTitle=document.getElementById('og-title');
-            const ogDesc=document.getElementById('og-description');
-            const twImg=document.getElementById('tw-image');
-            const twTitle=document.getElementById('tw-title');
-            const twDesc=document.getElementById('tw-description');
-            
-            if(ogImg)ogImg.setAttribute('content',cardapio.imagem);
-            if(ogTitle)ogTitle.setAttribute('content',cardapio.ogTitle);
-            if(ogDesc)ogDesc.setAttribute('content',cardapio.ogDesc);
-            if(twImg)twImg.setAttribute('content',cardapio.imagem);
-            if(twTitle)twTitle.setAttribute('content',cardapio.ogTitle);
-            if(twDesc)twDesc.setAttribute('content',cardapio.ogDesc);
-            
-            console.log('✅ Meta Tags atualizadas:',cardapio.ogTitle);
         }
         
         // Event listeners protegidos
