@@ -3,8 +3,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ❌ NÃO COLOQUE app.use(express.static('public')) AQUI NO TOPO!
-
 // ✅ Cardápios da semana
 const cardapios = {
   'segunda-feira': { 
@@ -46,10 +44,36 @@ const cardapios = {
 
 const IMAGE_BASE = 'https://anshulaprashad.github.io/marmitex/';
 
+// ✅ CORRIGIDO: Usa fuso horário de São Paulo (Brasil)
 function obterDiaSemana() {
   const dias = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
   const hoje = new Date();
-  return dias[hoje.getDay()];
+  
+  // Converte para horário de São Paulo (UTC-3)
+  const options = { 
+    timeZone: 'America/Sao_Paulo',
+    weekday: 'long' 
+  };
+  
+  try {
+    const diaBrasil = hoje.toLocaleDateString('pt-BR', options).toLowerCase();
+    console.log(`📅 Horário Brasil: ${hoje.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`);
+    console.log(`📅 Dia no Brasil: ${diaBrasil}`);
+    
+    // Garante que está no formato correto
+    if (diaBrasil.includes('sábado')) return 'sábado';
+    if (diaBrasil.includes('domingo')) return 'domingo';
+    if (diaBrasil.includes('segunda')) return 'segunda-feira';
+    if (diaBrasil.includes('terça')) return 'terça-feira';
+    if (diaBrasil.includes('quarta')) return 'quarta-feira';
+    if (diaBrasil.includes('quinta')) return 'quinta-feira';
+    if (diaBrasil.includes('sexta')) return 'sexta-feira';
+    
+    return dias[hoje.getDay()]; // fallback
+  } catch (error) {
+    console.error('❌ Erro ao obter dia da semana:', error);
+    return dias[hoje.getDay()]; // fallback
+  }
 }
 
 // ⚡ ROTA PRINCIPAL - DEVE VIR ANTES DO express.static()
@@ -62,7 +86,7 @@ app.get('/', (req, res) => {
   const imageUrlComCache = `${imageUrl}?v=${timestamp}`;
 
   console.log('='.repeat(60));
-  console.log(`📅 Data/Hora: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`);
+  console.log(`📅 Data/Hora BRASIL: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`);
   console.log(`📅 Dia da semana: ${hoje}`);
   console.log(`🤖 User Agent: ${userAgent.substring(0, 100)}...`);
   console.log(`🖼️ Imagem do dia: ${cardapio.img}`);
@@ -289,6 +313,20 @@ app.get('/test/:dia', (req, res) => {
   `);
 });
 
+// ✅ Rota de teste de horário
+app.get('/time', (req, res) => {
+  const nowUTC = new Date();
+  const nowBR = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const diaBR = obterDiaSemana();
+  
+  res.json({
+    horario_utc: nowUTC.toISOString(),
+    horario_brasil: nowBR,
+    dia_brasil: diaBR,
+    fuso_horario: 'America/Sao_Paulo'
+  });
+});
+
 app.get('/health', (req, res) => {
   const hoje = obterDiaSemana();
   const cardapio = cardapios[hoje];
@@ -300,7 +338,8 @@ app.get('/health', (req, res) => {
     cardapio_hoje: cardapio.titulo,
     imagem_hoje: cardapio.img,
     imagem_url_completa: `${IMAGE_BASE}${cardapio.img}`,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    horario_brasil: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
   });
 });
 
@@ -309,11 +348,16 @@ app.use(express.static('public'));
 
 // 🚀 Inicia servidor
 app.listen(PORT, () => {
+  const agoraBR = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const diaBR = obterDiaSemana();
+  
   console.log('='.repeat(60));
   console.log('👑 O REI DA MARMITEX - Preview Dinâmico WhatsApp');
   console.log(`🚀 Servidor rodando na porta: ${PORT}`);
   console.log(`🔗 URL Principal: https://marmitaria-premium.onrender.com/`);
   console.log(`🌐 Landing Page: https://marmitaria-premium.onrender.com/landing`);
-  console.log(`📅 Dia atual: ${obterDiaSemana()}`);
+  console.log(`📅 Horário Brasil: ${agoraBR}`);
+  console.log(`📅 Dia atual (BR): ${diaBR}`);
+  console.log(`⏰ Fuso horário: America/Sao_Paulo (UTC-3)`);
   console.log('='.repeat(60));
 });
